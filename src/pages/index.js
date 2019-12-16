@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "gatsby"
-import moment from 'moment'
+import moment from "moment"
 
 import {
   Collapse,
@@ -134,6 +134,16 @@ const docs_columns = [
   {
     title: "Document Name",
     dataIndex: "name",
+    render: name => (
+      <>
+        {name.endsWith(".xlsx") ? (
+          <Icon type="file-excel" />
+        ) : (
+          <Icon type="file-pdf" />
+        )}{" "}
+        <span>{name}</span>
+      </>
+    ),
   },
   {
     title: "Document Amount",
@@ -333,12 +343,14 @@ const expandedRowRender = record => {
         size="middle"
       />
       <h2 style={{ paddingBottom: 20 }}>Checklist</h2>
-      <Progress
-        percent={eval(record.progress) * 100}
-        showInfo={false}
-        style={{ width: "80%", paddingRight: "20px" }}
-      />
-      <span>{record.progress}</span>
+      <div style={{height:50}}>
+        <Progress
+          percent={eval(record.progress) * 100}
+          showInfo={false}
+          style={{ width: "80%", paddingRight: "20px" }}
+        />
+        <span>{record.progress}</span>
+      </div>
       <Table
         style={{ paddingBottom: 50 }}
         columns={checklist_columns}
@@ -350,7 +362,14 @@ const expandedRowRender = record => {
   )
 }
 
-let visible, setVisible, comments, setComments, submitting, setSubmitting, value, setValue
+let visible,
+  setVisible,
+  comments,
+  setComments,
+  submitting,
+  setSubmitting,
+  value,
+  setValue
 
 const msgs = [
   {
@@ -371,10 +390,10 @@ const msgs = [
 ]
 
 const MainPage = props => {
-  [visible, setVisible] = React.useState(false);
-  [comments, setComments] = React.useState([...msgs]);
-  [value, setValue] = React.useState('');
-  [submitting, setSubmitting] = React.useState(false);
+  ;[visible, setVisible] = React.useState(false)
+  ;[comments, setComments] = React.useState([...msgs])
+  ;[value, setValue] = React.useState("")
+  ;[submitting, setSubmitting] = React.useState(false)
 
   return (
     <ContainerLayout>
@@ -417,7 +436,11 @@ const MainPage = props => {
         />
         <div>
           <Form.Item>
-            <Input.TextArea rows={4} onChange={e => setValue(e.target.value)} value={value} />
+            <Input.TextArea
+              rows={4}
+              onChange={e => setValue(e.target.value)}
+              value={value}
+            />
           </Form.Item>
           <Form.Item>
             <Button
@@ -426,10 +449,17 @@ const MainPage = props => {
               onClick={() => {
                 if (!value) return
                 setSubmitting(true)
-                setTimeout(() =>{
-                  setComments([...comments, {from: "Shane L.", note:value, date:moment().format('YYYY-MM-DD h:mm a')}])
+                setTimeout(() => {
+                  setComments([
+                    ...comments,
+                    {
+                      from: "Shane L.",
+                      note: value,
+                      date: moment().format("YYYY-MM-DD h:mm a"),
+                    },
+                  ])
                   setSubmitting(false)
-                  setValue('')
+                  setValue("")
                 }, 1000)
               }}
               type="primary"
